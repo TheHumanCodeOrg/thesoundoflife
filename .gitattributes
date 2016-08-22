@@ -48,3 +48,13 @@ sounds/6393__menegass__guigui-acoustic-drum-set filter=lfs diff=lfs merge=lfs -t
 sounds/7293__atonia__vibraphone filter=lfs diff=lfs merge=lfs -text
 sounds/88268__ttptp__g.wav.asd filter=lfs diff=lfs merge=lfs -text
 sounds/Vintage[[:space:]]Drum[[:space:]]Machine[[:space:]]Samples filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/1548__spt3125__timpani filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/5460__meg__manthey-piano filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/6393__menegass__guigui-acoustic-drum-set filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/7293__atonia__vibraphone filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/10430__menegass__nord-drum-mini-kit filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/11876__theminkman__homemade-junk-drums filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/12679__peridactyloptrix__music-tribal filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/14741__the-very-real-horst__chinese-gong filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/16870__beskhu__xylophone-for-children filter=lfs diff=lfs merge=lfs -text
+/Volumes/Cincinnati/git/thesoundoflife/sounds/19073__shnur__recorded-percussion filter=lfs diff=lfs merge=lfs -text
