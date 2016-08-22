@@ -1,0 +1,4 @@
+nonpolar, 45 26 17;
+polar, 53 187 69;
+acidic, 68 5 172;
+basic, 200 5 5;

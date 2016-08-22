@@ -1,0 +1,21 @@
+The file univox.zip is a complete sample set of the Univox Micro-Rhythmer 12, 
+a little-known but very nice analog drum box.    Thanks go out to Dave 
+Daydodge of Minneapolis for letting me borrow his.
+
+I sampled all 12 of the preset rhythms and all 4 of the individual sounds by 
+themselves.  All the loops should be at about the same tempo but might be 
+cut kinda badly, I didn't spend alot of time zeroing in on the best sample 
+length.  The only problem with the individual sounds is that I had to cut 
+them out of the preset loops and the bass drum never occurs by itself, so it 
+is layered with a closed hi-hat.  All the samples are normalized and are 16 
+bit mono WAV files.  
+
+I hope you find this set useful.  Please feel free to copy or distribute
+the set in any way.  Please DO NOT change samples, add samples,
+delete samples, or modify this text file in any way.  Respect the work. 
+This sample set is FREE.  You may not distribute these samples for
+profit!!   If you have any comments please feel free to email me.
+
+rob williams - may 1995
+feed@maroon.tc.umn.edu
+(c)1995

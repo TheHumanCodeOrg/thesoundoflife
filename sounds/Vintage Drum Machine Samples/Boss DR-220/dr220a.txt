@@ -1,0 +1,18 @@
+Boss DR 220 A
+
+This drumbox from the mid 80's contains 
+static samples, only volume is adjustable.
+Just sample and play back, then you have 
+an original sounding DR 220 A.
+
+BD - Bassdrum
+SN - Snaredrum
+RIM - Rimshot
+HCP - Handclap
+CH - Closed HiHat
+OH - Open HiHat
+RCY - RideCymbal
+CCY - CrashCymbal
+LT - Low Tom
+MT - Mid Tom
+HT - High Tom

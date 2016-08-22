@@ -1,0 +1,19 @@
+Yamaha RX-21
+
+Samples:
+  CCrx21.wav	crash cymbal
+  CLrx21.wav	claps
+  HCrx21.wav	closed hihat
+  HOrx21.wav	open hihat
+  KIrx21.wav	bass drum (kick)
+  SNrx21.wav	snare
+  TMrx211.wav	tom 1
+  TMrx212.wav	tom 2
+  TMrx213.wav	tom 3
+  YAMArx21.pgm	GM program for MPC2000
+  
+  All samples recorded directly to and MPC2000 and trimmed and normalized using Cool Edit 96.  Format is 44.1kHz/16bit/mono PCM wave file.
+
+I couldn't find any info on this drum machine, and I didn't have the manual, so I can only say what I know from playing with it.  It has a whopping 9 sounds.  The sounds are mono samples with fixed pan positions.  It's not velocity sensitive, but the individual volume can be set for each sound and there is an accent key which increases the volume of each sound by an amount that can be set for each sound individually.  It has a single track internal sequencer with step and real time write modes.  It can hold 99 patterns and 4 songs with 99 steps in each song.  The only MIDI functionallity it seems to have is receiving/outputing MIDI clock data and receiving/outputing start/stop/continue.  I couldn't find any way to make it output or respond to note on/off data.  It has a port for saving and loading data from cassette.  It's only outputs are a 1/4" headphone jack, L(MONO) and R.
+
+Brian Redmond
