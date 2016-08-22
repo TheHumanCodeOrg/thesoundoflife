@@ -1,3 +1,12 @@
+# amino_acid.py
+
+"""
+Convenience functions for decoding base pair codons, and for converting between different representations
+of an amino acid. For example, the amino acid Methionine can be represented as the character 'M', the integer
+77 (which is the ascii value of a capital M), or as its index, 10, since it is the 10th amino acid when
+they are sorted alphabetically.
+"""
+
 import json
 
 with open("../data/dna_key.json") as f:

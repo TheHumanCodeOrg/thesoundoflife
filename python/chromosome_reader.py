@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# chromosome_reader.py
+
 from amino_acid import *
 
 chunksize = 1000
