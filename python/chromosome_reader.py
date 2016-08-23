@@ -15,10 +15,14 @@ class ChromosomeReader:
 		self.moreComing = True
 		self.chunk = None
 		self.basePairsRead = 0
+		self.aminoAcidsRead = 0
 		self.loadNextChunk()
 
 	def getBasePairsRead(self):
 		return self.basePairsRead
+
+	def getAminoAcidsRead(self):
+		return self.aminoAcidsRead
 
 	def loadChromosomeFile(self, filename):
 		if (self.chromosome):
@@ -31,6 +35,7 @@ class ChromosomeReader:
 		self.moreComing = True
 		self.chunk = None
 		self.basePairsRead = 0
+		self.aminoAcidsRead = 0
 		self.loadNextChunk()
 
 	def loadNextChunk(self):
@@ -61,6 +66,7 @@ class ChromosomeReader:
 				self.idx = self.idx + 1
 		self.idx = 0
 		if not termine:
+			self.aminoAcidsRead += 1
 			return codonBufferToAmino(self.buf)
 		self.moreComing = False
 		return None

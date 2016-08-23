@@ -24,10 +24,18 @@ cn = Conductor()
 ## OSC Handlers
 def density_handler(addr, tags, stuff, source):
 	global cn
-	groupIdx = stuff[0]
-	seqIdx = stuff[1]
-	density = stuff[2]
-	cn.setDensity(groupIdx, seqIdx, density)
+	channel = stuff[0]
+	density = stuff[1]
+	cn.setDensity(channel, density)
+
+def get_amino_acid_handler(addr, tags, stuff, source):
+	global out_c
+	global cn
+	msg = OSC.OSCMessage()
+	msg.setAddress("/aminoAcidCounts")
+	for cnt in cn.getAminoAcidCounts():
+		msg.append(cnt)
+	out_c.send(msg)
 
 def ping_handler(addr, tags, stuff, source):
 	send_ping_event()
@@ -40,6 +48,7 @@ def reset_handler(addr, tags, stuff, source):
 	global filename
 	global cr
 	global cn
+	print "Resetting"
 	cr.loadChromosomeFile(filename)
 	cn.reset()
 
@@ -50,9 +59,17 @@ def read_handler(addr, tags, stuff, source):
 	"""
 	global cr
 	global cn
-	if cr.hasNext():
-		cn.addAmino(cr.nextAmino())
-		send_read_complete_event()
+
+	toRead = 1
+	if len(stuff) > 0:
+		toRead = stuff[0]
+
+	for _ in range(toRead):
+		if cr.hasNext():
+			cn.addAmino(cr.nextAmino())
+		else:
+			break
+	send_read_complete_event()
 
 def step_handler(addr, tags, stuff, source):
 	"""
@@ -86,11 +103,13 @@ def send_read_complete_event():
 	msg = OSC.OSCMessage()
 	msg.setAddress("/ready")
 	msg.append(cr.getBasePairsRead())
+	msg.append(cr.getAminoAcidsRead())
 	out_c.send(msg)
 
 ## Receiving messages
 in_c = OSC.OSCServer(('127.0.0.1', listening_port))
 in_c.addMsgHandler('/density', density_handler)
+in_c.addMsgHandler('/getAminoAcidCounts', get_amino_acid_handler)
 in_c.addMsgHandler('/ping', ping_handler)
 in_c.addMsgHandler('/read', read_handler)
 in_c.addMsgHandler('/reset', reset_handler)

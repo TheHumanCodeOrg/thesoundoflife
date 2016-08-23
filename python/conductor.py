@@ -70,14 +70,15 @@ class Conductor:
 				if (self.inProgressPolypeptide.size() > largeSequenceBPSize):
 					s = Sequence(self.inProgressPolypeptide, largeSequenceSize)
 					self.largeSequences.appendPendingSequence(s)
-					print "New Large Sequence"
-					print s
+					print "New large sequence"
 				elif (self.inProgressPolypeptide.size() > mediumSequencesBPSize):
 					s = Sequence(self.inProgressPolypeptide, mediumSequenceSize)
 					self.mediumSequences.appendPendingSequence(s)
+					print "New medium sequence"
 				elif (self.inProgressPolypeptide.size() > smallSequenceBPSize):
 					s = Sequence(self.inProgressPolypeptide, smallSequenceSize)
 					self.smallSequences.appendPendingSequence(s)
+					print "New small sequence"
 				
 				## TODO Handle incidental polypeptides like this
 
@@ -93,13 +94,7 @@ class Conductor:
 		## Count the amino for LFO's
 		if not aminoIsStopCodon(aa):
 			aa_idx = aminoToIndex(aa)
-			self.aminoAcidCounts[aa_idx] = ((self.aminoAcidCounts[aa_idx] + 1) % maxAminoCount)
-			if (aa_idx < 7):
-				seq_group = 0 if aa_idx < 4 else 1 if aa_idx < 6 else 2
-				seq_idx = aa_idx if aa_idx < 4 else aa_idx - 4 if aa_idx < 6 else 0
-				density = float(self.aminoAcidCounts[aa_idx]) / maxAminoCount
-				if self.sequenceGroups[seq_group].getSequences()[seq_idx] is not None:
-					self.sequenceGroups[seq_group].getSequences()[seq_idx].setDensity(density)
+			self.aminoAcidCounts[aa_idx] = (self.aminoAcidCounts[aa_idx] + 1)
 
 	def processStep(self, step):
 		## If the step is a downbeat, and you've got sequences to swap, then do it here
@@ -120,6 +115,8 @@ class Conductor:
 		self.polypeptides = []
 		self.isSynthesizingPolypeptide = False
 		self.inProgressPolypeptide = None
+		self.aminoAcidCounts = [0 for _ in range(20)]
+		
 		self.totalSequences = 0
 		self.smallSequences = SequenceGroup(smallSequenceCount, smallSequenceSize, 1 + self.totalSequences)
 		self.totalSequences += smallSequenceCount
@@ -130,5 +127,12 @@ class Conductor:
 
 		self.sequenceGroups = [self.smallSequences, self.mediumSequences, self.largeSequences]
 
-	def setDensity(self, groupIdx, seqIdx, density):
-		self.sequenceGroups[groupIdx].getSequences()[seqIdx].setDensity(density)
+	def getAminoAcidCounts(self):
+		return self.aminoAcidCounts
+
+	def setDensity(self, channel, density):
+		for sg in self.sequenceGroups:
+			if channel >= sg.getChannelOffset() and channel < sg.getChannelOffset() + len(sg.getSequences()):
+				seq = sg.getSequences()[channel - sg.getChannelOffset()]
+				if seq is not None:
+					seq.setDensity(density)
