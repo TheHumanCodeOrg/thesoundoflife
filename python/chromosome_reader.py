@@ -14,7 +14,11 @@ class ChromosomeReader:
 		self.chunkidx = 0
 		self.moreComing = True
 		self.chunk = None
+		self.basePairsRead = 0
 		self.loadNextChunk()
+
+	def getBasePairsRead(self):
+		return self.basePairsRead
 
 	def loadChromosomeFile(self, filename):
 		if (self.chromosome):
@@ -26,6 +30,7 @@ class ChromosomeReader:
 		self.chunkidx = 0
 		self.moreComing = True
 		self.chunk = None
+		self.basePairsRead = 0
 		self.loadNextChunk()
 
 	def loadNextChunk(self):
@@ -47,7 +52,8 @@ class ChromosomeReader:
 					break
 
 			ch = self.chunk[self.chunkidx]
-			self.chunkidx = self.chunkidx + 1
+			self.basePairsRead += 1
+			self.chunkidx += 1
 			if (ch is 'N'):
 				self.idx = 0
 			elif ch in 'CATGcatg':

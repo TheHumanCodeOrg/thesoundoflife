@@ -22,6 +22,16 @@ cr = ChromosomeReader(filename)
 cn = Conductor()
 
 ## OSC Handlers
+def density_handler(addr, tags, stuff, source):
+	global cn
+	groupIdx = stuff[0]
+	seqIdx = stuff[1]
+	density = stuff[2]
+	cn.setDensity(groupIdx, seqIdx, density)
+
+def ping_handler(addr, tags, stuff, source):
+	send_ping_event()
+
 def reset_handler(addr, tags, stuff, source):
 	"""
 	Handles messages with the /reset address. Moves the curson back to the beginning of the current
@@ -50,16 +60,10 @@ def step_handler(addr, tags, stuff, source):
 	that is the current beat. Will send a message to /midi with all of the midi messages associated with
 	that beat.
 	"""
-	midiEvents = cn.midiEventsForStep(stuff[0])
+	midiEvents = cn.processStep(stuff[0])
 	send_midi_events(midiEvents)
 
 ## OSC Senders
-def send_read_complete_event():
-	global out_c
-	msg = OSC.OSCMessage()
-	msg.setAddress("/ready")
-	out_c.send(msg)
-
 def send_midi_events(events):
 	global out_c
 	msg = OSC.OSCMessage()
@@ -69,10 +73,27 @@ def send_midi_events(events):
 			msg.append(i)
 	out_c.send(msg)
 
+def send_ping_event():
+	global out_c
+	msg = OSC.OSCMessage()
+	msg.setAddress("/echo")
+	msg.append(time.time())
+	out_c.send(msg)
+
+def send_read_complete_event():
+	global out_c
+	global cr
+	msg = OSC.OSCMessage()
+	msg.setAddress("/ready")
+	msg.append(cr.getBasePairsRead())
+	out_c.send(msg)
+
 ## Receiving messages
 in_c = OSC.OSCServer(('127.0.0.1', listening_port))
-in_c.addMsgHandler('/reset', reset_handler)
+in_c.addMsgHandler('/density', density_handler)
+in_c.addMsgHandler('/ping', ping_handler)
 in_c.addMsgHandler('/read', read_handler)
+in_c.addMsgHandler('/reset', reset_handler)
 in_c.addMsgHandler('/step', step_handler)
 
 ## Sending messages

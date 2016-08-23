@@ -1,11 +1,14 @@
 from polypeptide import *
 from amino_acid import *
+from math import floor
 
 class Sequence:
 	def __init__(self, polypeptide, size):
 		self.polypeptide = polypeptide
 		self.size = size
 		self.chunks = self.chunksForPolypeptide(polypeptide)
+		self.sequenceIndexSet = []
+		self.density = 1.0
 		self.sequence = self.initializeSequence()
 
 	def chunksForPolypeptide(self, polypeptide, minsize=4):
@@ -39,17 +42,25 @@ class Sequence:
 						event[1] = min(127, vel + event[1])
 					else:
 						seqTrack[eidx] = [pitch, vel]
+			if aidx not in outSequence:
+				self.sequenceIndexSet.append(aidx)
 			outSequence[aidx] = seqTrack
 		return outSequence
 
-	def midiEventsForStep(self, step):
+	def midiEventsForStep(self, step, channel):
 		midiEvents = []
 		eidx = step % self.size
-		for seqTrackIdx in self.sequence:
+		tracksToUse = floor(self.density * len(self.sequenceIndexSet))
+		for trackIdx, seqTrackIdx in enumerate(self.sequenceIndexSet):
+			if (trackIdx >= tracksToUse):
+				break
 			seqTrack = self.sequence[seqTrackIdx]
 			if seqTrack[eidx] is not None:
-				midiEvents.append(seqTrack[eidx])
+				midiEvents.append(seqTrack[eidx] + [channel])
 		return midiEvents
+
+	def setDensity(self, d):
+		self.density = d
 
 	def __str__(self):
 		os = ""
