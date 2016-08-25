@@ -2,14 +2,23 @@ from polypeptide import *
 from amino_acid import *
 from math import floor
 
+maxNoteAge = 3
+maxNoteCount = 2
+
 class Sequence:
-	def __init__(self, polypeptide, size):
+	def __init__(self, polypeptide, size, options = {}):
 		self.polypeptide = polypeptide
 		self.size = size
 		self.chunks = self.chunksForPolypeptide(polypeptide)
 		self.sequenceIndexSet = []
 		self.density = 1.0
 		self.sequence = self.initializeSequence()
+		self.age = 0
+		self.mono = options.get("mono", False)
+		self.currentNote = None
+		self.currentNoteAge = 0
+		self.stepRate = options.get("stepRate", 1)
+		self.lastStep = 0
 
 	def chunksForPolypeptide(self, polypeptide, minsize=4):
 		idx = 0
@@ -48,6 +57,10 @@ class Sequence:
 		return outSequence
 
 	def midiEventsForStep(self, step, channel):
+		step = step / self.stepRate
+		if step == self.lastStep:
+			return []
+		self.lastStep = step
 		midiEvents = []
 		eidx = step % self.size
 		tracksToUse = floor(self.density * len(self.sequenceIndexSet))
@@ -57,6 +70,24 @@ class Sequence:
 			seqTrack = self.sequence[seqTrackIdx]
 			if seqTrack[eidx] is not None:
 				midiEvents.append(seqTrack[eidx] + [channel])
+		midiEvents = midiEvents[0:maxNoteCount]
+
+		if self.mono:
+			midiEvents.sort(key=lambda x: x[0], reverse=True)
+			if self.currentNote is not None:
+				if midiEvents:
+					self.currentNoteAge += 1
+				if self.currentNoteAge > maxNoteAge:
+					self.currentNote = midiEvents[0]
+					self.currentNoteAge = 0
+					midiEvents = [midiEvents[0]]
+				else:
+					midiEvents = []
+			else:
+				self.currentNote = midiEvents[0]
+				self.currentNoteAge = 0
+				midiEvents = [midiEvents[0]]
+
 		return midiEvents
 
 	def setDensity(self, d):

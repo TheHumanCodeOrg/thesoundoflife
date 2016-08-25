@@ -8,20 +8,29 @@ smallSequenceSize = 16
 smallSequenceBPSize = 90
 mediumSequenceCount = 2
 mediumSequenceSize = 32
-mediumSequencesBPSize = 150
+mediumSequencesBPSize = 120
+mediumSequenceOptions = {
+	"maxAge": 16
+}
 largeSequenceCount = 1
-largeSequenceSize = 64
-largeSequenceBPSize = 200
+largeSequenceSize = 16
+largeSequenceBPSize = 150
+largeSequenceOptions = {
+	"maxAge": 768
+}
 
 maxAminoCount = 200
 
 class SequenceGroup:
-	def __init__(self, seqCount, size, channelOffset):
+	def __init__(self, seqCount, size, channelOffset, options={}):
 		self.sequences = [None for _ in range(seqCount)]
 		self.seqIndex = 0
 		self.pendingSequences = []
+		self.sequenceIndexesToRemove = []
 		self.channelOffset = channelOffset
 		self.size = size
+		self.fixedDensity = options.get("fixedDensity", 1.0)
+		self.maxAge = options.get("maxAge", -1)
 
 	def getSize(self):
 		return self.size
@@ -33,7 +42,10 @@ class SequenceGroup:
 		return step % self.size == 0
 
 	def flushPendingSequences(self):
+		for idx in self.sequenceIndexesToRemove:
+			self.sequences[idx] = None
 		for s in self.pendingSequences:
+			s.setDensity(self.fixedDensity)
 			self.sequences[self.seqIndex] = s
 			self.seqIndex = (self.seqIndex + 1)  % len(self.sequences)
 		self.pendingSequences = []
@@ -43,6 +55,9 @@ class SequenceGroup:
 
 	def getChannelOffset(self):
 		return self.channelOffset
+
+	def removeSequenceAtIndex(self, idx):
+		self.sequenceIndexesToRemove.append(idx)
 
 class Conductor:
 	def __init__(self):
@@ -56,7 +71,7 @@ class Conductor:
 		self.totalSequences += smallSequenceCount
 		self.mediumSequences = SequenceGroup(mediumSequenceCount, mediumSequenceSize, 1 + self.totalSequences)
 		self.totalSequences += mediumSequenceCount
-		self.largeSequences = SequenceGroup(largeSequenceCount, largeSequenceSize, 1 + self.totalSequences)
+		self.largeSequences = SequenceGroup(largeSequenceCount, largeSequenceSize, 1 + self.totalSequences, largeSequenceOptions)
 		self.totalSequences += largeSequenceCount
 
 		self.sequenceGroups = [self.smallSequences, self.mediumSequences, self.largeSequences]
@@ -68,11 +83,11 @@ class Conductor:
 				# self.polypeptides.append(self.inProgressPolypeptide)
 
 				if (self.inProgressPolypeptide.size() > largeSequenceBPSize):
-					s = Sequence(self.inProgressPolypeptide, largeSequenceSize)
+					s = Sequence(self.inProgressPolypeptide, largeSequenceSize, {"stepRate": 32})
 					self.largeSequences.appendPendingSequence(s)
 					print "New large sequence"
 				elif (self.inProgressPolypeptide.size() > mediumSequencesBPSize):
-					s = Sequence(self.inProgressPolypeptide, mediumSequenceSize)
+					s = Sequence(self.inProgressPolypeptide, mediumSequenceSize, {"stepRate": 2})
 					self.mediumSequences.appendPendingSequence(s)
 					print "New medium sequence"
 				elif (self.inProgressPolypeptide.size() > smallSequenceBPSize):
@@ -101,6 +116,12 @@ class Conductor:
 		for sg in self.sequenceGroups:
 			if (sg.isDownbeat(step)):
 				sg.flushPendingSequences()
+			for sidx, seq in enumerate(sg.getSequences()):
+				if seq is not None:
+					seq.age += 1
+					if sg.maxAge > -1:
+						if seq.age > sg.maxAge:
+							sg.removeSequence(sidx)
 
 		# Now generate MIDI for all the events
 		midiEvents = []
