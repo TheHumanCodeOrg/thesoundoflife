@@ -10,13 +10,11 @@ mediumSequenceCount = 2
 mediumSequenceSize = 32
 mediumSequencesBPSize = 120
 mediumSequenceOptions = {
-	"maxAge": 16
 }
 largeSequenceCount = 1
 largeSequenceSize = 16
 largeSequenceBPSize = 150
 largeSequenceOptions = {
-	"maxAge": 768
 }
 
 maxAminoCount = 200
@@ -121,7 +119,7 @@ class Conductor:
 					seq.age += 1
 					if sg.maxAge > -1:
 						if seq.age > sg.maxAge:
-							sg.removeSequence(sidx)
+							sg.removeSequenceAtIndex(sidx)
 
 		# Now generate MIDI for all the events
 		midiEvents = []

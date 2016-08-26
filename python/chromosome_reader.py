@@ -2,11 +2,15 @@
 # chromosome_reader.py
 
 from amino_acid import *
+import os
 
 chunksize = 1000
 
 class ChromosomeReader:
 	def __init__(self, filename):
+		self.filename = filename
+		self.bytesize = os.path.getsize(filename)
+		self.estimatedTotalAminos = self.bytesize / 3
 		self.chromosome = open(filename, 'r')
 		self.chromosome.readline()
 		self.buf = [0 for x in range(3)]
@@ -27,6 +31,9 @@ class ChromosomeReader:
 	def loadChromosomeFile(self, filename):
 		if (self.chromosome):
 			self.chromosome.close()
+		self.filename = filename
+		self.bytesize = os.path.getsize(filename)
+		self.estimatedTotalAminos = self.bytesize / 3
 		self.chromosome = open(filename, 'r')
 		self.chromosome.readline()
 		self.buf = [0 for x in range(3)]
@@ -36,6 +43,11 @@ class ChromosomeReader:
 		self.chunk = None
 		self.basePairsRead = 0
 		self.aminoAcidsRead = 0
+		self.loadNextChunk()
+		print "Loaded chromosome at {}".format(filename)
+
+	def seekPosition(self, position):
+		self.chromosome.seek(position)
 		self.loadNextChunk()
 
 	def loadNextChunk(self):
