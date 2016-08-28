@@ -6,6 +6,8 @@ from sequence import *
 smallSequenceCount = 4
 smallSequenceSize = 16
 smallSequenceBPSize = 90
+smallSequenceOptions = {
+}
 mediumSequenceCount = 2
 mediumSequenceSize = 32
 mediumSequencesBPSize = 120
@@ -42,6 +44,7 @@ class SequenceGroup:
 	def flushPendingSequences(self):
 		for idx in self.sequenceIndexesToRemove:
 			self.sequences[idx] = None
+		self.sequenceIndexesToRemove = []
 		for s in self.pendingSequences:
 			s.setDensity(self.fixedDensity)
 			self.sequences[self.seqIndex] = s
@@ -55,7 +58,9 @@ class SequenceGroup:
 		return self.channelOffset
 
 	def removeSequenceAtIndex(self, idx):
-		self.sequenceIndexesToRemove.append(idx)
+		if idx not in self.sequenceIndexesToRemove:
+			print "Removing sequence at index {}".format(idx)
+			self.sequenceIndexesToRemove.append(idx)
 
 class Conductor:
 	def __init__(self):
@@ -65,9 +70,9 @@ class Conductor:
 		self.aminoAcidCounts = [0 for _ in range(20)]
 
 		self.totalSequences = 0
-		self.smallSequences = SequenceGroup(smallSequenceCount, smallSequenceSize, 1 + self.totalSequences)
+		self.smallSequences = SequenceGroup(smallSequenceCount, smallSequenceSize, 1 + self.totalSequences, smallSequenceOptions)
 		self.totalSequences += smallSequenceCount
-		self.mediumSequences = SequenceGroup(mediumSequenceCount, mediumSequenceSize, 1 + self.totalSequences)
+		self.mediumSequences = SequenceGroup(mediumSequenceCount, mediumSequenceSize, 1 + self.totalSequences, mediumSequenceOptions)
 		self.totalSequences += mediumSequenceCount
 		self.largeSequences = SequenceGroup(largeSequenceCount, largeSequenceSize, 1 + self.totalSequences, largeSequenceOptions)
 		self.totalSequences += largeSequenceCount

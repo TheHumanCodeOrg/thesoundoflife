@@ -68,7 +68,7 @@ def read_handler(addr, tags, stuff, source):
 
 	toRead = 1
 	if len(stuff) > 0:
-		toRead = stuff[0]
+		toRead = int(stuff[0])
 
 	for _ in range(toRead):
 		if cr.hasNext():

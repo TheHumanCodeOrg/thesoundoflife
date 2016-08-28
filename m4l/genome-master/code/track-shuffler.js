@@ -1,5 +1,5 @@
 var ons = [];
-var offs = [1, 2, 3, 4, 5, 6, 7];
+var offs = [1, 2, 5, 7];
 
 function density(d) {
 	if (d > ons.length && offs.length > 0) {
@@ -40,7 +40,7 @@ function dump() {
 }
 
 function all_on() {
-	ons = [1, 2, 3, 4, 5, 6, 7];
+	ons = [1, 2, 5, 7];
 	offs = [];
 	dump();
 }
