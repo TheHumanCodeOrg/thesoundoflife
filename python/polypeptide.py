@@ -2,6 +2,16 @@ from amino_acid import *
 from math import pi, cos, sin
 from graphics import *
 
+
+"""
+Polypeptide stores a list of amino acids. Typical use involves calling addAmino with a sequence of amino
+acids, until a stop codon is reached. Then, one can call getIntersections to get all of the indexes where
+the polypeptide intersects itself. Sequence uses this method to divide the polypeptide into chunks.
+
+If a graphics context exists, one can call graphicsDraw to draw the polypeptide. Not used or supported, but
+useful for debugging.
+"""
+
 class Polypeptide:
 	def __init__(self):
 		self.aminos = []
@@ -9,6 +19,13 @@ class Polypeptide:
 		self.intersections = []
 
 	def addAmino(self, aa):
+		"""
+		Appends the amino acids to the polypeptide chain. If the amino acid intersects the current protein,
+		then its index will be appended to self.intersections as well.
+
+		The amino acid should be a single capital character that maps to an amino acid. See data/dna_key.json
+		for valid characters. 
+		"""
 		self.aminos.append(aa)
 		lastPoint = self.points[-1]
 		angle = aminoAngle(aa)
@@ -22,12 +39,22 @@ class Polypeptide:
 				break
 
 	def getIntersections(self):
+		"""
+		Returns a list of each index where an amino acid intersects the rest of the protein chain.
+		"""
 		return self.intersections
 
 	def getAminos(self):
+		"""
+		Returns the amino acids in the protein as a list. Each amino acid is a single capital character
+		"""
 		return self.aminos
 
 	def segmentsIntersect(self, seg1, seg2):
+		"""
+		Utility method for determining if two two-dimensional segments intersect. Each seg argument is assumed
+		to be a list of two lists of length two. AKA a two-by-two array.
+		"""
 		s1_x = seg1[1][0] - seg1[0][0]
 		s1_y = seg1[1][1] - seg1[0][1]
 		s2_x = seg2[1][0] - seg2[0][0]
@@ -43,6 +70,9 @@ class Polypeptide:
 			return False
 
 	def graphicsDraw(self, win, center):
+		"""
+		Will draw the amino acid at center, given a window to draw in. See graphics.py for more.
+		"""
 		lastPoint = None
 		for p in self.points:
 			thisPoint = Point(p[0] + center.x, p[1] + center.y)
@@ -52,6 +82,9 @@ class Polypeptide:
 			lastPoint = thisPoint
 
 	def size(self):
+		"""
+		The number of amino acids in the chain
+		"""
 		return (len(self.aminos))
 
 	def __str__(self):

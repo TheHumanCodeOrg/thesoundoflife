@@ -24,12 +24,22 @@ def aminoIsStartCodon(aa):
 	return aa == 'M'
 
 def aminoAngle(aa):
+	"""
+	Each amino acid is mapped to an arbitrary angle according to the values in data/dna_key.json. These
+	values are NOT based on real physical properties.
+	"""
 	return angles[str(ord(aa))]
 
 def aminoToIndex(aa):
+	"""
+	Each amino acid is given a unique index between 0 and 19, inclusive, according to the values in data/dna_key.json
+	"""
 	return ascii2idx[str(ord(aa))]
 
 def codonBufferToAmino(buf):
+	"""
+	Given a codon string of length 3 containing only the characters, a, c, g or t, this will return the appropriate amino acid
+	"""
 	global codons
 	buf = "".join(buf).upper()
 	cod = codons[buf]
