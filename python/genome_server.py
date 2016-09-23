@@ -24,7 +24,7 @@ from conductor import *
 
 if len(sys.argv) < 2:
 	print "Usage: python genome_server.py <filename>\n<filename> must be the path to a .fa genome file"
-	return
+	sys.exit(0);
 
 listening_port = 3337
 max_sending_port = 3338
