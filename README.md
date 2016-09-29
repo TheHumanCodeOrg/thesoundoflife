@@ -9,7 +9,7 @@ The system has three parts, in Max, Ableton Live and Python. The Python server l
 cd python
 virtualenv /tmp/dna
 source /tmp/dna/bin/activate
-pip install -r requirements
+pip install -r requirements.txt
 python genome_server.py ../data/chromosomes/chr21.fa
 ```
 
